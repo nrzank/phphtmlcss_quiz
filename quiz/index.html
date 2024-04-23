@@ -11,8 +11,9 @@
 
 <body>
 
+
 <h2>Тест</h2>
-<form action="submit.php" method="post">
+<form id="quizForm" action="submit.php" method="post">
     <p>Оставшееся время:<span id="timer"> </span>секунд</p>
     <ol>
         <li>
@@ -225,6 +226,33 @@
     }
 
     updateTimer();
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('quizForm');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+
+            fetch('submit.php', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.text())
+                .then(data => {
+                    const resultContainer = document.createElement('div');
+                    resultContainer.innerHTML = data;
+                    form.parentNode.appendChild(resultContainer);
+
+                    // Скрыть форму
+                    form.style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    });
 </script>
 </body>
 </html>
